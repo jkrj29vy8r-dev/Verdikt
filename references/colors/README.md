@@ -30,7 +30,7 @@ Implementation: the token source of truth is `src/styles/globals.css`
 - Semantic tokens (background, primary, verdict-\*, signature-\*, chart-\*) →
   `src/styles/globals.css`
 - Tailwind exposure → `@theme inline` block in the same file
-- WebGL hex mirrors → `BRAND` in `src/components/three/verdikt-core.tsx`
+- WebGL hex mirrors → `BRAND` in `src/components/three/vehicle-silhouette.tsx`
 
 ## Not here
 

@@ -203,9 +203,13 @@ middleware.ts       ▼                ▼
   `Magnetic`, `Parallax` — mean product code animates declaratively and never
   hand-rolls an animation config. All honor `prefers-reduced-motion`.
 - **3D** mounts through one shell: `SceneCanvas` configures the renderer once
-  (capped DPR, demand frameloop under reduced-motion). Scenes (`VerdiktCore`)
-  are pure content. `HeroScene` lazy-loads WebGL client-side (`ssr: false`) with
-  a gradient fallback, keeping three.js off the critical path.
+  (capped DPR, demand frameloop under reduced-motion). Scenes
+  (`VehicleSilhouette` — an original, procedural vehicle profile, never a
+  sourced model) are pure content. `HeroScene` wraps the scene in
+  `PresentationControls` for a constrained, pointer-driven camera and
+  lazy-loads WebGL client-side (`ssr: false`) with a gradient fallback,
+  keeping three.js off the critical path and degrading cleanly when WebGL is
+  unsupported (`useWebglSupported`).
 
 > **RSC gotcha, encoded in the code:** compound components (`Stagger.Item`) do
 > **not** survive the server→client boundary — a Server Component importing a

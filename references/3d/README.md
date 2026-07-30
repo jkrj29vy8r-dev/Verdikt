@@ -4,7 +4,7 @@ Reference material for the **WebGL layer** — scenes, materials, lighting, and
 composition for the Three.js / React Three Fiber surfaces.
 
 Implementation: `src/components/three/*` (renderer shell `SceneCanvas`, scene
-`VerdiktCore`, lazy wrapper `HeroScene`).
+`VehicleSilhouette`, lazy wrapper `HeroScene`).
 
 ## What goes here
 
@@ -23,12 +23,22 @@ Implementation: `src/components/three/*` (renderer shell `SceneCanvas`, scene
 - State the **triangle budget** and target FPS for every scene concept.
 - Note whether a reference needs an external HDRI/asset (and its license).
 - Keep capture clips short; link to CodeSandbox/R3F examples where possible.
+- **No fetched HDRIs.** `Environment preset="…"` pulls a ~1MB file from a
+  third-party CDN on every load — a real reliability and performance
+  liability for a hero, and it reflects generic scenery instead of our
+  palette. Build the environment procedurally from `Lightformer` shapes
+  (`frames={1}` to bake once) instead, as `vehicle-silhouette.tsx` does.
 
 ## Maps to the code
 
 - Renderer defaults (DPR cap, frameloop) → `scene-canvas.tsx`
-- Signature scene (distorted icosahedron, sparkles, environment) → `verdikt-core.tsx`
-- WebGL brand hexes (mirror the OKLCH tokens) → `BRAND` in `verdikt-core.tsx`
+- Pointer-driven camera (constrained, spring-damped) → `PresentationControls` in
+  `hero-scene.tsx`
+- Signature scene (extruded vehicle profile, holographic edge glow, scan sweep,
+  sparkles) → `vehicle-silhouette.tsx`
+- WebGL brand hexes (mirror the OKLCH tokens) → `BRAND` in
+  `vehicle-silhouette.tsx`
+- WebGL capability fallback → `useWebglSupported` (`src/hooks`)
 
 ## Not here
 

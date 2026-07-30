@@ -31,6 +31,14 @@ Implementation: `src/components/marketing/hero.tsx` +
 - Interactive demo & result reveal → `hero-demo.tsx`
 - 3D core behind the hero → `src/components/three/hero-scene.tsx`
 - Headline gradient → `.text-gradient-signature` in `src/styles/globals.css`
+- AI-holographic HUD chips + the decoding VIN readout →
+  `vin-scanner-overlay.tsx`
+
+**Composition rule learned the hard way:** copy is top-anchored
+(`justify-start`, not centered) and the vehicle sits low in the frame
+(`position={[0, -0.95, 0]}` in `vehicle-silhouette.tsx`) so the 3D subject and
+the text column never compete for the same vertical center — an early pass
+centered both and the paragraph read straight through a car door.
 
 ## Not here
 

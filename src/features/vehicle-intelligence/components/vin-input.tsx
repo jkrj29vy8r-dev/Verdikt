@@ -58,7 +58,7 @@ export function VinInput({
     <div className={cn("w-full", className)}>
       <div
         className={cn(
-          "flex items-center gap-2 rounded-xl border border-input bg-card/60 p-2 shadow-sm backdrop-blur transition-colors focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/40",
+          "surface-glass border-hairline flex items-center gap-2 rounded-xl border p-2 shadow-lg transition-colors focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/40",
           showError && "border-destructive focus-within:ring-destructive/30",
         )}
       >

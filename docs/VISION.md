@@ -55,7 +55,8 @@ How that maps to what we've built:
   lead every report.
 - **Obsidian + azure→violet signature** — dark theme is the canvas; the
   signature gradient is the single confident accent.
-- **3D & glass** — the `VerdiktCore` scene and `surface-glass` chrome supply the
+- **3D & glass** — the `VehicleSilhouette` scene (an original, faceted vehicle
+  profile with a holographic edge glow) and `surface-glass` chrome supply the
   Tesla-grade depth.
 - **Premium motion** — composed from shared tokens (`Reveal`, `Stagger`,
   `blurIn`), reduced-motion honored.

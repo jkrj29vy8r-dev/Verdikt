@@ -23,13 +23,14 @@ and provenance**.
   license recorded in `SOURCES.md`. When in doubt, don't.
 - Ship **optimized** runtime models only: Draco/meshopt compressed, textures
   ≤ 2K, target ≤ ~1–2 MB. Put the runtime copy in `public/models/`.
-- Prefer **procedural geometry** (as `VerdiktCore` does today) when a model
-  isn't essential — it is lighter, themeable, and dependency-free.
+- Prefer **procedural geometry** (as `VehicleSilhouette` does today — an
+  original, hand-authored profile extruded in three.js, zero license exposure)
+  when a model isn't essential. It is lighter, themeable, and dependency-free.
 - Name by subject + variant: `intelligence-core.glb`, `sedan-lowpoly.glb`.
 
 ## Maps to the code
 
-- Current signature object is procedural (no model file) → `verdikt-core.tsx`
+- Current signature object is procedural (no model file) → `vehicle-silhouette.tsx`
 - Loader path when a model is introduced → Drei `useGLTF("/models/<name>.glb")`
 - Remote model hosts are allowlisted in `next.config.ts` image/remote patterns
   only for imagery — model files should be self-hosted in `public/`.
