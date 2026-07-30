@@ -1,0 +1,277 @@
+/* ============================================================================
+ * Verdikt — Global stylesheet & design tokens
+ *
+ * This file is the single source of truth for the visual language. It is
+ * organized in four passes:
+ *   1. Imports & variants        — Tailwind engine + dark-mode variant
+ *   2. Semantic tokens           — light/dark values as CSS custom properties
+ *   3. Theme mapping (@theme)     — expose tokens to Tailwind utilities
+ *   4. Base layer                — element-level defaults
+ *
+ * Colors are authored in OKLCH for perceptual uniformity: lightness reads the
+ * same across hues, which keeps the palette calm and premium. Application code
+ * should ONLY ever reference the semantic tokens (bg-background, text-primary,
+ * text-verdict-clear, …) — never raw hex or oklch literals.
+ * ========================================================================== */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Dark mode is class-driven (see next-themes ThemeProvider). */
+@custom-variant dark (&:is(.dark *));
+
+/* ── Light theme ─────────────────────────────────────────────────────────── */
+:root {
+  --radius: 0.75rem;
+
+  /* Surfaces & text */
+  --background: oklch(0.99 0.003 255);
+  --foreground: oklch(0.17 0.012 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.17 0.012 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.17 0.012 265);
+
+  /* Brand — Verdikt Azure */
+  --primary: oklch(0.55 0.17 245);
+  --primary-foreground: oklch(0.99 0.003 255);
+
+  --secondary: oklch(0.96 0.006 255);
+  --secondary-foreground: oklch(0.24 0.015 265);
+
+  --muted: oklch(0.96 0.006 255);
+  --muted-foreground: oklch(0.52 0.014 265);
+
+  --accent: oklch(0.95 0.012 250);
+  --accent-foreground: oklch(0.24 0.015 265);
+
+  --destructive: oklch(0.58 0.22 27);
+  --destructive-foreground: oklch(0.99 0.003 255);
+
+  --border: oklch(0.9 0.006 265);
+  --input: oklch(0.92 0.006 265);
+  --ring: oklch(0.55 0.17 245);
+
+  /* Verdict semantics — the core product signal */
+  --verdict-clear: oklch(0.6 0.15 155);
+  --verdict-clear-foreground: oklch(0.99 0.003 255);
+  --verdict-caution: oklch(0.72 0.15 80);
+  --verdict-caution-foreground: oklch(0.2 0.02 80);
+  --verdict-flag: oklch(0.58 0.22 27);
+  --verdict-flag-foreground: oklch(0.99 0.003 255);
+
+  /* Signature accents for the marketing / 3D surfaces */
+  --signature: oklch(0.55 0.17 245);
+  --signature-2: oklch(0.62 0.16 285);
+
+  /* Data-visualization palette */
+  --chart-1: oklch(0.55 0.17 245);
+  --chart-2: oklch(0.62 0.16 285);
+  --chart-3: oklch(0.6 0.15 155);
+  --chart-4: oklch(0.72 0.15 80);
+  --chart-5: oklch(0.58 0.18 20);
+
+  /* Sidebar surfaces */
+  --sidebar: oklch(0.98 0.004 255);
+  --sidebar-foreground: oklch(0.17 0.012 265);
+  --sidebar-primary: oklch(0.55 0.17 245);
+  --sidebar-primary-foreground: oklch(0.99 0.003 255);
+  --sidebar-accent: oklch(0.95 0.012 250);
+  --sidebar-accent-foreground: oklch(0.24 0.015 265);
+  --sidebar-border: oklch(0.9 0.006 265);
+  --sidebar-ring: oklch(0.55 0.17 245);
+}
+
+/* ── Dark theme (the hero surface) ───────────────────────────────────────── */
+.dark {
+  --background: oklch(0.15 0.012 265);
+  --foreground: oklch(0.98 0.004 250);
+  --card: oklch(0.19 0.014 265);
+  --card-foreground: oklch(0.98 0.004 250);
+  --popover: oklch(0.19 0.014 265);
+  --popover-foreground: oklch(0.98 0.004 250);
+
+  --primary: oklch(0.7 0.15 240);
+  --primary-foreground: oklch(0.15 0.012 265);
+
+  --secondary: oklch(0.25 0.016 265);
+  --secondary-foreground: oklch(0.98 0.004 250);
+
+  --muted: oklch(0.25 0.014 265);
+  --muted-foreground: oklch(0.7 0.016 265);
+
+  --accent: oklch(0.29 0.022 260);
+  --accent-foreground: oklch(0.98 0.004 250);
+
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.98 0.004 250);
+
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.7 0.15 240);
+
+  --verdict-clear: oklch(0.74 0.16 158);
+  --verdict-clear-foreground: oklch(0.15 0.012 265);
+  --verdict-caution: oklch(0.82 0.15 84);
+  --verdict-caution-foreground: oklch(0.2 0.02 80);
+  --verdict-flag: oklch(0.66 0.21 25);
+  --verdict-flag-foreground: oklch(0.98 0.004 250);
+
+  --signature: oklch(0.7 0.15 240);
+  --signature-2: oklch(0.72 0.15 290);
+
+  --chart-1: oklch(0.7 0.15 240);
+  --chart-2: oklch(0.72 0.15 290);
+  --chart-3: oklch(0.74 0.16 158);
+  --chart-4: oklch(0.82 0.15 84);
+  --chart-5: oklch(0.68 0.19 20);
+
+  --sidebar: oklch(0.17 0.013 265);
+  --sidebar-foreground: oklch(0.98 0.004 250);
+  --sidebar-primary: oklch(0.7 0.15 240);
+  --sidebar-primary-foreground: oklch(0.15 0.012 265);
+  --sidebar-accent: oklch(0.29 0.022 260);
+  --sidebar-accent-foreground: oklch(0.98 0.004 250);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.7 0.15 240);
+}
+
+/* ── Theme mapping ───────────────────────────────────────────────────────── */
+/* Expose semantic tokens to Tailwind's utility layer. `inline` keeps the
+ * generated utilities referencing the live custom properties so runtime theme
+ * switches (light ⇆ dark) are instant and JS-free. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-verdict-clear: var(--verdict-clear);
+  --color-verdict-clear-foreground: var(--verdict-clear-foreground);
+  --color-verdict-caution: var(--verdict-caution);
+  --color-verdict-caution-foreground: var(--verdict-caution-foreground);
+  --color-verdict-flag: var(--verdict-flag);
+  --color-verdict-flag-foreground: var(--verdict-flag-foreground);
+
+  --color-signature: var(--signature);
+  --color-signature-2: var(--signature-2);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radius scale derived from a single knob. */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Typography — wired to next/font (Geist) CSS variables. */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Motion — signature easings shared by CSS, Framer Motion & GSAP.
+   * Mirror any change in `src/lib/motion/tokens.ts`. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Premium elevation system — cool, diffuse, low-contrast. */
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 2px 8px -2px oklch(0 0 0 / 0.08);
+  --shadow-md: 0 8px 24px -6px oklch(0 0 0 / 0.12);
+  --shadow-lg: 0 20px 48px -12px oklch(0 0 0 / 0.2);
+  --shadow-glow: 0 0 48px -8px var(--signature);
+}
+
+/* ── Base layer ──────────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
+  }
+
+  /* Respect users who prefer reduced motion — GSAP/Framer read this too. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Tabular figures for VINs, mileage, valuations. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ── Utilities ───────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Signature gradient text for hero headlines. */
+  .text-gradient-signature {
+    background-image: linear-gradient(
+      120deg,
+      var(--foreground) 0%,
+      var(--signature) 55%,
+      var(--signature-2) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Hairline separators that read on both themes. */
+  .border-hairline {
+    border-color: color-mix(in oklch, var(--foreground) 8%, transparent);
+  }
+
+  /* Frosted premium surface. */
+  .surface-glass {
+    background-color: color-mix(in oklch, var(--card) 72%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+  }
+}
