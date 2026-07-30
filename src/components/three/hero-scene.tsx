@@ -58,7 +58,11 @@ export function HeroScene({ className }: { className?: string }) {
           fallback={<SceneFallback />}
           dpr={isMobile ? [1, 1.5] : [1, 2]}
         >
+          {/* Pointer-drag rotation is desktop-only: on touch, a global drag
+           * over the full-bleed canvas would hijack page scroll. Mobile keeps
+           * the idle spin + scroll-reactive motion, which is plenty. */}
           <PresentationControls
+            enabled={!isMobile}
             global
             cursor
             snap

@@ -6,6 +6,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { blurIn } from "@/lib/motion";
 import { HeroScene } from "@/components/three";
 import { HeroDemo } from "./hero-demo";
+import { HeroParallax } from "./hero-parallax";
 import { DecodingVinReadout, HolographicHud } from "./vin-scanner-overlay";
 
 interface HeadlineWord {
@@ -48,46 +49,49 @@ export function Hero() {
       <HolographicHud />
 
       <Container className="relative z-10 flex flex-1 flex-col items-center justify-start pt-28 pb-16 text-center md:pt-36">
-        <Reveal>
-          <Badge variant="secondary" className="mb-6 gap-1.5 py-1">
-            <Sparkles className="size-3.5" />
-            AI-powered vehicle intelligence
-          </Badge>
-        </Reveal>
+        <HeroParallax className="flex w-full flex-col items-center">
+          <Reveal>
+            <Badge variant="secondary" className="mb-6 gap-1.5 py-1">
+              <Sparkles className="size-3.5" />
+              AI-powered vehicle intelligence
+            </Badge>
+          </Reveal>
 
-        <Stagger
-          gap={0.06}
-          delay={0.05}
-          className="flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-1"
-        >
-          {HEADLINE.map((word) => (
-            <StaggerItem
-              key={word.text}
-              variants={blurIn}
-              className="text-5xl font-semibold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
-            >
-              <span
-                className={
-                  word.signature ? "text-gradient-signature" : undefined
-                }
+          <Stagger
+            gap={0.06}
+            delay={0.05}
+            className="flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-1"
+          >
+            {HEADLINE.map((word) => (
+              <StaggerItem
+                key={word.text}
+                variants={blurIn}
+                className="text-5xl font-semibold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
               >
-                {word.text}
-              </span>
-            </StaggerItem>
-          ))}
-        </Stagger>
+                <span
+                  className={
+                    word.signature ? "text-gradient-signature" : undefined
+                  }
+                >
+                  {word.text}
+                </span>
+              </StaggerItem>
+            ))}
+          </Stagger>
 
-        <Reveal delay={0.35}>
-          <p className="mt-6 max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
-            Decode any VIN into a definitive verdict — history, valuation, risk
-            and market position — synthesized in seconds. No signup required.
-          </p>
-        </Reveal>
+          <Reveal delay={0.35}>
+            <p className="mt-6 max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
+              Decode any VIN into a definitive verdict — history, valuation,
+              risk and market position — synthesized in seconds. No signup
+              required.
+            </p>
+          </Reveal>
 
-        <Reveal delay={0.42} className="mt-10 w-full max-w-xl">
-          <DecodingVinReadout className="mb-3" />
-          <HeroDemo />
-        </Reveal>
+          <Reveal delay={0.42} className="mt-10 w-full max-w-xl">
+            <DecodingVinReadout className="mb-3" />
+            <HeroDemo />
+          </Reveal>
+        </HeroParallax>
       </Container>
 
       <ScrollCue />
