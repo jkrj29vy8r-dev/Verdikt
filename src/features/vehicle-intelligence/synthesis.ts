@@ -1,4 +1,5 @@
 import type {
+  ConfidenceLevel,
   IntelligenceDimension,
   MaintenanceSchedule,
   Recommendation,
@@ -7,6 +8,7 @@ import type {
   VehicleIntelligenceReport,
   VehicleValuation,
   VehicleVerdict,
+  VerdictConfidence,
   VerdictStatus,
 } from "./types";
 import {
@@ -154,31 +156,156 @@ export function synthesizeReport(
       label: meta.label,
       score,
       status,
-      summary: `${meta.description} Analysis indicates a ${status} standing for this dimension.`,
+      summary: interpretDimension(meta.label, score, status),
       signals: buildSignals(meta.key, status, rand),
     };
   });
 
   const verdictScore = composeVerdictScore(dimensions);
   const recommendation = scoreToRecommendation(verdictScore);
+  const valuation = estimateValuation(identity, rand);
+  const repairForecast = forecastRepairs(identity, rand);
+  const maintenance = scheduleMaintenance(rand);
+  const confidence = deriveConfidence(identity, verdictScore, rand);
+
   const verdict: VehicleVerdict = {
     score: verdictScore,
     status: scoreToStatus(verdictScore),
     recommendation,
     headline: buildHeadline(identity, recommendation),
-    summary: `Across ${dimensions.length} dimensions, ${identity.year} ${identity.make} ${identity.model} scores ${verdictScore}/100. Weighing title history, risk, valuation, market position, and ownership, Verdikt's recommendation is to ${recommendation}.`,
+    summary: buildVerdictSummary({
+      identity,
+      verdictScore,
+      recommendation,
+      dimensions,
+      repairForecast,
+      maintenance,
+      confidence,
+    }),
+    confidence,
   };
 
   return {
     id,
     identity,
     verdict,
-    valuation: estimateValuation(identity, rand),
-    repairForecast: forecastRepairs(identity, rand),
-    maintenance: scheduleMaintenance(rand),
+    valuation,
+    repairForecast,
+    maintenance,
     dimensions,
     generatedAt: new Date().toISOString(),
   };
+}
+
+/** Compact USD, no cents — for budget framing inside prose. */
+function usd(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+/** Interpret a dimension's score in an inspector's voice — what it means for the
+ * buyer, not a restatement of the dimension's definition. */
+function interpretDimension(
+  label: string,
+  score: number,
+  status: VerdictStatus,
+): string {
+  const read =
+    status === "clear"
+      ? "nothing here gives me pause"
+      : status === "caution"
+        ? "a few things I'd want to confirm before signing"
+        : "this is where I'd slow the deal down";
+  return `${label} scores ${score}/100 — ${read}.`;
+}
+
+/**
+ * Gauge how firmly the records back the verdict. Borderline scores and thin
+ * identity data lower confidence, so an uncertain call is never dressed up as a
+ * certain one. Seeded, so a given VIN always reads the same.
+ */
+function deriveConfidence(
+  identity: VehicleIdentity,
+  verdictScore: number,
+  rand: () => number,
+): VerdictConfidence {
+  const borderline = [
+    VERDICT_THRESHOLDS.clear,
+    VERDICT_THRESHOLDS.caution,
+  ].some((t) => Math.abs(verdictScore - t) <= 3);
+  const completeness = [
+    identity.trim,
+    identity.engine,
+    identity.drivetrain,
+  ].filter(Boolean).length;
+  const depth = rand();
+
+  let level: ConfidenceLevel;
+  if (borderline || (completeness <= 1 && depth < 0.4)) level = "limited";
+  else if (completeness >= 3 && depth > 0.55) level = "high";
+  else level = "moderate";
+
+  const note =
+    level === "high"
+      ? "Corroborated across multiple independent records — this reads as a firm call."
+      : level === "moderate"
+        ? "Backed by a solid record set, though a few data points are lighter than I'd like."
+        : borderline
+          ? "This one sits right on the line between bands; small new facts could move the verdict, so weigh it carefully."
+          : "The available history is thin in places — treat this as a starting read and verify the gaps in person.";
+
+  return { level, note };
+}
+
+/**
+ * The interpretive, inspector-voiced verdict paragraph the deterministic engine
+ * produces. It is also the fallback whenever the live Verdikt AI pass is
+ * unavailable, so the product reads the same with or without a model.
+ */
+function buildVerdictSummary(input: {
+  identity: VehicleIdentity;
+  verdictScore: number;
+  recommendation: Recommendation;
+  dimensions: IntelligenceDimension[];
+  repairForecast: RepairForecast;
+  maintenance: MaintenanceSchedule;
+  confidence: VerdictConfidence;
+}): string {
+  const {
+    identity,
+    verdictScore,
+    recommendation,
+    dimensions,
+    repairForecast,
+    maintenance,
+    confidence,
+  } = input;
+
+  const ranked = [...dimensions].sort((a, b) => b.score - a.score);
+  const strongest = ranked[0];
+  const weakest = ranked[ranked.length - 1];
+
+  const lead =
+    recommendation === "buy"
+      ? "This is a car I'd buy."
+      : recommendation === "consider"
+        ? "Worth considering, with your eyes open."
+        : "I'd walk away from this one.";
+
+  const focus =
+    strongest && weakest && strongest.key !== weakest.key
+      ? ` Its strongest ground is ${strongest.label.toLowerCase()}; ${weakest.label.toLowerCase()} is where I'd focus a pre-purchase inspection.`
+      : "";
+
+  const budget =
+    repairForecast.twelveMonthEstimate > 0
+      ? `Budget roughly ${usd(maintenance.annualEstimate)} a year in upkeep and about ${usd(repairForecast.twelveMonthEstimate)} in likely repairs over the first year.`
+      : `Budget roughly ${usd(maintenance.annualEstimate)} a year in upkeep; nothing major is flagged to fail in the first year.`;
+
+  return `${lead} The ${identity.year} ${identity.make} ${identity.model} scores ${verdictScore}/100 overall.${focus} ${budget} ${confidence.note}`;
 }
 
 function buildHeadline(

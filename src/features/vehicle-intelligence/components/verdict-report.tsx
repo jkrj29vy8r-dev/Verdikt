@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { VerdictScore } from "@/components/shared/verdict-score";
 import { Stagger, StaggerItem } from "@/components/motion";
 
+import type { ConfidenceLevel, VerdictConfidence } from "../types";
 import type { VehicleIntelligenceReport } from "../types";
 import { DimensionCard } from "./dimension-card";
 import { RecommendationPill } from "./recommendation-pill";
@@ -53,6 +54,9 @@ export function VerdictReport({
             <p className="text-pretty text-muted-foreground">
               {verdict.summary}
             </p>
+            {verdict.confidence ? (
+              <ConfidenceNote confidence={verdict.confidence} />
+            ) : null}
             <p className="tabular text-xs tracking-widest text-muted-foreground">
               VIN {formatVin(identity.vin)}
             </p>
@@ -114,6 +118,43 @@ function Fact({
         {label}
       </span>
       <span className="text-sm font-medium text-pretty">{children}</span>
+    </div>
+  );
+}
+
+const CONFIDENCE_LABEL: Record<ConfidenceLevel, string> = {
+  high: "High",
+  moderate: "Moderate",
+  limited: "Limited",
+};
+
+const CONFIDENCE_DOT: Record<ConfidenceLevel, string> = {
+  high: "bg-verdict-clear",
+  moderate: "bg-verdict-caution",
+  limited: "bg-verdict-flag",
+};
+
+/**
+ * The transparency line: how firmly the records back this verdict, in the
+ * inspector's own words — so an uncertain call is never presented as a certain
+ * one.
+ */
+function ConfidenceNote({ confidence }: { confidence: VerdictConfidence }) {
+  return (
+    <div className="surface-glass border-hairline flex items-start gap-2.5 rounded-xl border p-3 text-left">
+      <span
+        className={cn(
+          "mt-1 size-2 shrink-0 rounded-full",
+          CONFIDENCE_DOT[confidence.level],
+        )}
+        aria-hidden
+      />
+      <p className="text-xs text-muted-foreground">
+        <span className="font-semibold text-foreground">
+          Data confidence: {CONFIDENCE_LABEL[confidence.level]}.
+        </span>{" "}
+        {confidence.note}
+      </p>
     </div>
   );
 }

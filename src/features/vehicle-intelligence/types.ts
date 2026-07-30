@@ -88,6 +88,17 @@ export interface IntelligenceDimension {
 export type DimensionKey =
   "history" | "valuation" | "risk" | "market" | "ownership";
 
+/** How much the underlying data supports the verdict — surfaced so an uncertain
+ * call is never presented as a certain one. */
+export type ConfidenceLevel = "high" | "moderate" | "limited";
+
+/** The transparency signal: how firmly the data backs the verdict, and why. */
+export interface VerdictConfidence {
+  level: ConfidenceLevel;
+  /** Inspector's note on what is (and isn't) corroborated by the records. */
+  note: string;
+}
+
 /** The synthesized top-line judgment — the "verdict". */
 export interface VehicleVerdict {
   score: number;
@@ -96,6 +107,9 @@ export interface VehicleVerdict {
   recommendation: Recommendation;
   headline: string;
   summary: string;
+  /** Optional for backward compatibility with reports persisted before the
+   * confidence signal existed; the synthesis engine always sets it now. */
+  confidence?: VerdictConfidence;
 }
 
 /** The complete intelligence report. Serialized into `vehicle_reports.payload`. */
