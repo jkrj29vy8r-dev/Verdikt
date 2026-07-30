@@ -1,12 +1,21 @@
 import type {
   IntelligenceDimension,
+  MaintenanceSchedule,
+  Recommendation,
+  RepairForecast,
   VehicleIdentity,
   VehicleIntelligenceReport,
   VehicleValuation,
   VehicleVerdict,
   VerdictStatus,
 } from "./types";
-import { DIMENSIONS, VERDICT_THRESHOLDS } from "./constants";
+import {
+  DIMENSIONS,
+  MAINTENANCE_CATALOG,
+  RECOMMENDATION_THRESHOLDS,
+  REPAIR_COMPONENTS,
+  VERDICT_THRESHOLDS,
+} from "./constants";
 
 /**
  * Deterministic intelligence engine (pure).
@@ -44,6 +53,13 @@ export function scoreToStatus(score: number): VerdictStatus {
   return "flagged";
 }
 
+/** Map a 0–100 score onto the explicit buy / consider / avoid call. */
+export function scoreToRecommendation(score: number): Recommendation {
+  if (score >= RECOMMENDATION_THRESHOLDS.buy) return "buy";
+  if (score >= RECOMMENDATION_THRESHOLDS.consider) return "consider";
+  return "avoid";
+}
+
 /** Weighted composite of dimension scores → the top-line verdict score. */
 export function composeVerdictScore(
   dimensions: IntelligenceDimension[],
@@ -71,6 +87,55 @@ function estimateValuation(
   };
 }
 
+/** Predict likely repairs, weighted by vehicle age (the reference model). */
+function forecastRepairs(
+  identity: VehicleIdentity,
+  rand: () => number,
+): RepairForecast {
+  const age = Math.max(0, new Date().getFullYear() - identity.year);
+  const items = [...REPAIR_COMPONENTS]
+    .sort(() => rand() - 0.5)
+    .slice(0, 3)
+    .map((c) => ({
+      component: c.component,
+      likelihood: Math.min(95, Math.round(18 + age * 4 + rand() * 28)),
+      horizonMonths: 3 + Math.floor(rand() * 21),
+      estimatedCost: Math.round((c.baseCost * (0.9 + rand() * 0.5)) / 10) * 10,
+    }))
+    .sort((a, b) => b.likelihood - a.likelihood);
+
+  const twelveMonthEstimate =
+    Math.round(
+      items
+        .filter((i) => i.horizonMonths <= 12)
+        .reduce((sum, i) => sum + (i.estimatedCost * i.likelihood) / 100, 0) /
+        10,
+    ) * 10;
+
+  return { items, twelveMonthEstimate };
+}
+
+/** Project the soonest routine services and the annualized upkeep cost. */
+function scheduleMaintenance(rand: () => number): MaintenanceSchedule {
+  const items = MAINTENANCE_CATALOG.map((m) => ({
+    service: m.service,
+    dueInMonths: 1 + Math.floor(rand() * m.intervalMonths),
+    dueInMiles: m.intervalMiles,
+    estimatedCost: m.cost,
+  }))
+    .sort((a, b) => a.dueInMonths - b.dueInMonths)
+    .slice(0, 4);
+
+  const annualEstimate = Math.round(
+    MAINTENANCE_CATALOG.reduce(
+      (sum, m) => sum + (m.cost * 12) / m.intervalMonths,
+      0,
+    ),
+  );
+
+  return { items, annualEstimate };
+}
+
 /**
  * Build a complete, deterministic report for a decoded vehicle. Narrative text
  * here is templated; production replaces it with LLM-authored copy.
@@ -95,11 +160,13 @@ export function synthesizeReport(
   });
 
   const verdictScore = composeVerdictScore(dimensions);
+  const recommendation = scoreToRecommendation(verdictScore);
   const verdict: VehicleVerdict = {
     score: verdictScore,
     status: scoreToStatus(verdictScore),
-    headline: buildHeadline(identity, verdictScore),
-    summary: `Across ${dimensions.length} dimensions, ${identity.year} ${identity.make} ${identity.model} scores ${verdictScore}/100. This synthesis weighs title history, risk, valuation, market position, and ownership.`,
+    recommendation,
+    headline: buildHeadline(identity, recommendation),
+    summary: `Across ${dimensions.length} dimensions, ${identity.year} ${identity.make} ${identity.model} scores ${verdictScore}/100. Weighing title history, risk, valuation, market position, and ownership, Verdikt's recommendation is to ${recommendation}.`,
   };
 
   return {
@@ -107,19 +174,23 @@ export function synthesizeReport(
     identity,
     verdict,
     valuation: estimateValuation(identity, rand),
+    repairForecast: forecastRepairs(identity, rand),
+    maintenance: scheduleMaintenance(rand),
     dimensions,
     generatedAt: new Date().toISOString(),
   };
 }
 
-function buildHeadline(identity: VehicleIdentity, score: number): string {
-  const v = scoreToStatus(score);
+function buildHeadline(
+  identity: VehicleIdentity,
+  recommendation: Recommendation,
+): string {
   const lead =
-    v === "clear"
+    recommendation === "buy"
       ? "A confident buy"
-      : v === "caution"
-        ? "Proceed with diligence"
-        : "Significant concerns";
+      : recommendation === "consider"
+        ? "Worth considering"
+        : "Approach with caution";
   return `${lead} — ${identity.year} ${identity.make} ${identity.model}`;
 }
 

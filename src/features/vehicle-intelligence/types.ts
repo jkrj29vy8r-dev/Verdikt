@@ -35,6 +35,45 @@ export interface VehicleValuation {
   currency: "USD";
 }
 
+/**
+ * The headline decision — Verdikt's reason for being. Distinct from the verdict
+ * *status* (a color band on the score): this is the explicit action a buyer
+ * takes away from the report.
+ */
+export type Recommendation = "buy" | "consider" | "avoid";
+
+/** A predicted future repair, with confidence, timing, and cost. */
+export interface RepairPrediction {
+  component: string;
+  /** Probability the repair is needed within the horizon (0–100). */
+  likelihood: number;
+  /** Expected months until onset. */
+  horizonMonths: number;
+  estimatedCost: number;
+}
+
+/** Forward-looking repair outlook (the "repair predictions" output). */
+export interface RepairForecast {
+  items: RepairPrediction[];
+  /** Risk-weighted expected repair spend over the next 12 months (USD). */
+  twelveMonthEstimate: number;
+}
+
+/** A single scheduled service item. */
+export interface MaintenanceItem {
+  service: string;
+  dueInMonths: number;
+  dueInMiles?: number;
+  estimatedCost: number;
+}
+
+/** Projected routine upkeep (the "maintenance estimation" output). */
+export interface MaintenanceSchedule {
+  items: MaintenanceItem[];
+  /** Expected routine-maintenance spend per year (USD). */
+  annualEstimate: number;
+}
+
 /** One scored analytical dimension of the report (history, risk, market…). */
 export interface IntelligenceDimension {
   key: DimensionKey;
@@ -53,6 +92,8 @@ export type DimensionKey =
 export interface VehicleVerdict {
   score: number;
   status: VerdictStatus;
+  /** The explicit buy / consider / avoid call. */
+  recommendation: Recommendation;
   headline: string;
   summary: string;
 }
@@ -63,6 +104,8 @@ export interface VehicleIntelligenceReport {
   identity: VehicleIdentity;
   verdict: VehicleVerdict;
   valuation: VehicleValuation;
+  repairForecast: RepairForecast;
+  maintenance: MaintenanceSchedule;
   dimensions: IntelligenceDimension[];
   generatedAt: string;
 }

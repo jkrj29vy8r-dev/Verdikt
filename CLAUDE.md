@@ -6,9 +6,12 @@
 
 ## Mission
 
-Build the world's most premium vehicle intelligence platform. A user enters a
-VIN and receives a definitive **verdict**. Everything we ship should feel
-inevitable, precise, and expensive — the Apple of vehicle data.
+Build the world's most premium vehicle intelligence platform — **Apple × Tesla**
+for vehicle data. Not a VIN checker: a user enters a VIN and receives a
+definitive **verdict** — history, AI analysis, a 0–100 score, repair
+predictions, maintenance and price estimates, and an explicit
+**Buy / Consider / Avoid** call. Everything we ship should feel inevitable,
+precise, and expensive. Full product vision: **`docs/VISION.md`**.
 
 ---
 
