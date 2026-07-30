@@ -79,6 +79,26 @@ A change is production-ready when **all** hold:
 
 ---
 
+## Design references workflow
+
+Inspiration lives in `references/` (external captures + analysis in
+`references/inspiration/`). It shapes taste; it is **never** copied.
+
+- **Before building any UI, analyze `references/` first.** Read the relevant
+  folder READMEs and `references/inspiration/README.md`, extract the _principle_
+  (glass search over hero, stat tiles, status pills, staged "how it works",
+  scored attribute tiles…), then build it with Verdikt tokens and metaphors.
+- **Never copy a design.** If the output could be mistaken for a captured
+  source, it is wrong — start over. Keep Verdikt's identity: **dark obsidian +
+  azure→violet signature**, **Geist** type (never a reference's serif/red/blue),
+  the **3D intelligence core**, and the **verdict ring**
+  (`clear`/`caution`/`flagged`). The product resolves to a **verdict**, not a
+  browse/booking flow.
+- References are **internal only** — never ship, embed, or publish a third-party
+  asset.
+
+---
+
 ## Quick map
 
 ```

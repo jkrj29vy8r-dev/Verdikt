@@ -9,18 +9,19 @@ specimens, and 3D assets, each organized by the surface or system it informs.
 
 ## Structure
 
-| Folder           | Informs                                                         |
-| ---------------- | --------------------------------------------------------------- |
-| `hero/`          | The landing hero — 3D backdrop, headline, live VIN demo         |
-| `dashboard/`     | Authenticated app — layout, stat tiles, report cards, data viz  |
-| `3d/`            | WebGL scenes, materials, lighting (`src/components/three`)      |
-| `animations/`    | Motion language — easings, reveals, scroll choreography         |
-| `colors/`        | Palette & OKLCH token system (`src/styles/globals.css`)         |
-| `typography/`    | Type scale, Geist specimens, editorial treatments               |
-| `glassmorphism/` | Frosted-surface treatments (`surface-glass`, `border-hairline`) |
-| `loading/`       | Skeletons, spinners, Suspense & progress states                 |
-| `icons/`         | Iconography — Lucide usage + the custom brand mark              |
-| `models/`        | 3D model assets (GLB/GLTF) and sourcing/optimization notes      |
+| Folder           | Informs                                                                |
+| ---------------- | ---------------------------------------------------------------------- |
+| `hero/`          | The landing hero — 3D backdrop, headline, live VIN demo                |
+| `dashboard/`     | Authenticated app — layout, stat tiles, report cards, data viz         |
+| `3d/`            | WebGL scenes, materials, lighting (`src/components/three`)             |
+| `animations/`    | Motion language — easings, reveals, scroll choreography                |
+| `colors/`        | Palette & OKLCH token system (`src/styles/globals.css`)                |
+| `typography/`    | Type scale, Geist specimens, editorial treatments                      |
+| `glassmorphism/` | Frosted-surface treatments (`surface-glass`, `border-hairline`)        |
+| `loading/`       | Skeletons, spinners, Suspense & progress states                        |
+| `icons/`         | Iconography — Lucide usage + the custom brand mark                     |
+| `models/`        | 3D model assets (GLB/GLTF) and sourcing/optimization notes             |
+| `inspiration/`   | External captures (mood board) + the analysis that extracts principles |
 
 ## How to use it
 
