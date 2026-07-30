@@ -2,6 +2,7 @@ import { requireUser } from "@/features/auth/server";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { UserMenu } from "@/components/layout/user-menu";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { SkipLink } from "@/components/layout/skip-link";
 
 /**
  * Authenticated app shell.
@@ -20,13 +21,16 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-dvh">
+      <SkipLink />
       <AppSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="border-hairline surface-glass sticky top-0 z-40 flex h-16 items-center justify-end gap-2 border-b px-6">
           <ThemeToggle />
           <UserMenu email={user.email ?? "account"} />
         </header>
-        <main className="flex-1 p-6 md:p-8">{children}</main>
+        <main id="main-content" className="flex-1 p-6 md:p-8">
+          {children}
+        </main>
       </div>
     </div>
   );

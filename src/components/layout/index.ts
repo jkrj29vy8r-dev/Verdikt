@@ -3,6 +3,7 @@
  * header/footer chrome. Composed from `ui` + `shared`; contain no data access.
  */
 export * from "./logo";
+export * from "./skip-link";
 export * from "./theme-toggle";
 export * from "./site-header";
 export * from "./site-footer";
