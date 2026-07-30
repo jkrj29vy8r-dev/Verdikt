@@ -30,7 +30,7 @@ import {
  */
 
 /** Deterministic PRNG (mulberry32) seeded from a string, so a VIN → stable report. */
-function seededRandom(seed: string): () => number {
+export function seededRandom(seed: string): () => number {
   let h = 1779033703 ^ seed.length;
   for (let i = 0; i < seed.length; i++) {
     h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
