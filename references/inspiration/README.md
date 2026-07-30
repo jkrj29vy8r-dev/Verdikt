@@ -14,20 +14,22 @@ through Verdikt's own identity (see "Verdikt divergence" below).
 Third-party UI, captured for internal reference. Not licensed for redistribution
 or reuse; do not ship any asset here or publish it externally.
 
-| File                                          | Source                                  | What it shows                                           |
-| --------------------------------------------- | --------------------------------------- | ------------------------------------------------------- |
-| `screens/01-mercedes-benz-test-drive-listing` | mercedes-benz.ro (mobile)               | Model listing, product card, filter/sort, price + CTA   |
-| `screens/02-mercedes-benz-mobile-menu`        | mercedes-benz.ro (mobile)               | Full-screen nav overlay, editorial "Meniu"              |
-| `screens/03-ridelux-landing-flow`             | Dribbble — "RideLux" (MQoS UI/UX)       | Full landing flow, two-phone mockup                     |
-| `screens/04-ridelux-trust-value-bento`        | Dribbble — "RideLux"                    | Bento value cards, image + solid-accent mix             |
-| `screens/05-ridelux-home-hero-how-it-works`   | Dribbble — "RideLux"                    | Hero + glass search bar, 4-step "How It Works"          |
-| `screens/06-ridelux-popular-cars-service`     | Dribbble — "RideLux"                    | Product cards, aerial-car radial service diagram        |
-| `screens/07-ridelux-latest-blogs-footer`      | Dribbble — "RideLux"                    | Content cards with arrow buttons, dark footer           |
-| `screens/08-rydex-marketplace-app`            | Dribbble — "Rydex" (Excellent Webworld) | Car marketplace app: onboarding, detail tabs, ratings   |
-| `screens/09-logistics-dashboard`              | Dribbble — logistics (The Ash Design)   | Stat tiles, tracking cards, status pills, timeline, map |
-| `motion/recording-1…5`                        | Mobile browsing session (2026-07-30)    | Scroll, reveal timing, and transition feel              |
+| File                                          | Source                                  | What it shows                                                                            |
+| --------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `screens/01-mercedes-benz-test-drive-listing` | mercedes-benz.ro (mobile)               | Model listing, product card, filter/sort, price + CTA                                    |
+| `screens/02-mercedes-benz-mobile-menu`        | mercedes-benz.ro (mobile)               | Full-screen nav overlay, editorial "Meniu"                                               |
+| `screens/03-ridelux-landing-flow`             | Dribbble — "RideLux" (MQoS UI/UX)       | Full landing flow, two-phone mockup                                                      |
+| `screens/04-ridelux-trust-value-bento`        | Dribbble — "RideLux"                    | Bento value cards, image + solid-accent mix                                              |
+| `screens/05-ridelux-home-hero-how-it-works`   | Dribbble — "RideLux"                    | Hero + glass search bar, 4-step "How It Works"                                           |
+| `screens/06-ridelux-popular-cars-service`     | Dribbble — "RideLux"                    | Product cards, aerial-car radial service diagram                                         |
+| `screens/07-ridelux-latest-blogs-footer`      | Dribbble — "RideLux"                    | Content cards with arrow buttons, dark footer                                            |
+| `screens/08-rydex-marketplace-app`            | Dribbble — "Rydex" (Excellent Webworld) | Car marketplace app: onboarding, detail tabs, ratings                                    |
+| `screens/09-logistics-dashboard`              | Dribbble — logistics (The Ash Design)   | Stat tiles, tracking cards, status pills, timeline, map                                  |
+| `screens/10-logistics-dashboard-detail-panel` | Dribbble — logistics (The Ash Design)   | Tabbed detail (Order/Customer/Driver/Vehicle), spec rows, 87% load bar, route + timeline |
+| `screens/11-logistics-dashboard-flatlay`      | Dribbble — logistics (The Ash Design)   | Flat-lay: tracking cards, "Paid" status pill, stat tiles                                 |
+| `motion/recording-1…6`                        | Mobile browsing session (2026-07-30)    | Scroll, reveal timing, and transition feel                                               |
 
-_Videos are heavy (~50 MB total) and can't be code-analyzed here; they're for
+_Videos are heavy (~65 MB total) and can't be code-analyzed here; they're for
 human review of motion feel. If repo weight matters, migrate them to Git LFS or
 keep them out and link externally._
 
@@ -52,9 +54,11 @@ attributes and a tabbed detail read as trustworthy intelligence._
 
 **Logistics dashboard — data you can act on.** **Stat tiles** with quiet colored
 icons, **tracking cards** with progress bars and **status pills** (In transit /
-Processing / Received), a **right-hand detail panel** with a **map** and a
-**movement timeline**, a left icon rail. Lesson: _dense data stays calm through
-tiles, pills, and a consistent detail panel._
+Processing / Received), a **right-hand detail panel** with a **map**, a
+**movement timeline**, a **tabbed detail** (Order / Customer / Driver /
+Vehicle) with spec rows and an 87% load bar, and a "Paid" status pill; a left
+icon rail. Lesson: _dense data stays calm through tiles, pills, and a
+consistent, tabbed detail panel._
 
 ## How principles map to Verdikt surfaces
 
