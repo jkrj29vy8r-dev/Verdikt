@@ -2,14 +2,14 @@ import { CalendarClock, Car, Coins, Gauge, Wrench } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatVin } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { VerdictScore } from "@/components/shared/verdict-score";
 import { Stagger, StaggerItem } from "@/components/motion";
 
-import type { Recommendation, VehicleIntelligenceReport } from "../types";
+import type { VehicleIntelligenceReport } from "../types";
 import { DimensionCard } from "./dimension-card";
+import { RecommendationPill } from "./recommendation-pill";
 
 /**
  * VerdictReport — the full report view. Composes the signature VerdictScore, the
@@ -43,7 +43,10 @@ export function VerdictReport({
             size="lg"
           />
           <div className="flex flex-1 flex-col gap-3 text-center md:text-left">
-            <RecommendationChip recommendation={verdict.recommendation} />
+            <RecommendationPill
+              recommendation={verdict.recommendation}
+              className="justify-center md:justify-start"
+            />
             <h1 className="text-2xl font-semibold tracking-tight text-balance md:text-3xl">
               {verdict.headline}
             </h1>
@@ -111,34 +114,6 @@ function Fact({
         {label}
       </span>
       <span className="text-sm font-medium text-pretty">{children}</span>
-    </div>
-  );
-}
-
-const RECOMMENDATION_META: Record<
-  Recommendation,
-  { label: string; variant: "clear" | "caution" | "flagged" }
-> = {
-  buy: { label: "Buy", variant: "clear" },
-  consider: { label: "Consider", variant: "caution" },
-  avoid: { label: "Avoid", variant: "flagged" },
-};
-
-/** The explicit buy / consider / avoid call, in the verdict's semantic color. */
-function RecommendationChip({
-  recommendation,
-}: {
-  recommendation: Recommendation;
-}) {
-  const meta = RECOMMENDATION_META[recommendation];
-  return (
-    <div className="flex items-center justify-center gap-2 md:justify-start">
-      <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        Verdikt recommends
-      </span>
-      <Badge variant={meta.variant} className="uppercase">
-        {meta.label}
-      </Badge>
     </div>
   );
 }
