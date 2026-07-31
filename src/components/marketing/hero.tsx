@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { ChevronDown, Sparkles } from "lucide-react";
 
 import { Container } from "@/components/shared/container";
@@ -66,25 +67,33 @@ export function Hero() {
             </Badge>
           </Reveal>
 
+          {/* The page's `h1`. The word-by-word cascade is a layout concern, so
+           * the container renders as the heading and each kinetic unit as a
+           * `span` — the reveal never costs the document its semantics. */}
           <Stagger
+            as="h1"
             gap={0.06}
             delay={0.05}
-            className="flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-1"
+            className="flex max-w-5xl flex-wrap justify-center gap-x-3 gap-y-1 text-5xl font-semibold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
           >
-            {HEADLINE.map((word) => (
-              <StaggerItem
-                key={word.text}
-                variants={blurIn}
-                className="text-5xl font-semibold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
-              >
-                <span
+            {HEADLINE.map((word, i) => (
+              <Fragment key={word.text}>
+                {/* A real space between words. The visual gap comes from flex
+                 * `gap-x-3`, but without actual whitespace the heading's
+                 * accessible name collapses to "Theverdictonanyvehicle." A
+                 * whitespace-only anonymous flex item is never rendered, so
+                 * this fixes the text for assistive tech at zero visual cost. */}
+                {i > 0 ? " " : null}
+                <StaggerItem
+                  as="span"
+                  variants={blurIn}
                   className={
                     word.signature ? "text-gradient-signature" : undefined
                   }
                 >
                   {word.text}
-                </span>
-              </StaggerItem>
+                </StaggerItem>
+              </Fragment>
             ))}
           </Stagger>
 

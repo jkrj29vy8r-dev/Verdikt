@@ -58,6 +58,7 @@ export default function ContactPage() {
     <Section container="narrow" className="pt-32 md:pt-40">
       <Reveal variants={blurIn} className="text-center">
         <SectionHeading
+          as="h1"
           eyebrow="Contact"
           title="Talk to us."
           description="Questions about a verdict, a partnership, or the product — pick whichever channel you'd actually use."

@@ -24,7 +24,10 @@ export function SiteFooter() {
 
           {footerNav.map((column) => (
             <div key={column.heading} className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold">{column.heading}</h3>
+              {/* `h2`, not `h3`: the footer is a top-level region, so its
+               * column titles sit one level under the page `h1`. An `h3` here
+               * creates an h1→h3 skip on pages whose body has no `h2`. */}
+              <h2 className="text-sm font-semibold">{column.heading}</h2>
               <ul className="flex flex-col gap-2">
                 {column.items.map((item) => (
                   <li key={item.href}>

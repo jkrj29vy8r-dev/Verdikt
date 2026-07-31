@@ -38,6 +38,10 @@ interface SectionHeadingProps extends Omit<
   title: React.ReactNode;
   description?: React.ReactNode;
   align?: "left" | "center";
+  /** Heading level to render. Defaults to `h2` — correct for a section within
+   * a page. Pass `h1` when this heading *is* the page's main heading, so a
+   * page built entirely from sections still exposes exactly one `h1`. */
+  as?: "h1" | "h2";
 }
 
 /** A titled section header: eyebrow, heading, and supporting copy. */
@@ -46,6 +50,7 @@ export function SectionHeading({
   title,
   description,
   align = "left",
+  as: Heading = "h2",
   className,
   ...props
 }: SectionHeadingProps) {
@@ -63,9 +68,9 @@ export function SectionHeading({
           {eyebrow}
         </span>
       ) : null}
-      <h2 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl lg:text-5xl">
+      <Heading className="text-3xl font-semibold tracking-tight text-balance md:text-4xl lg:text-5xl">
         {title}
-      </h2>
+      </Heading>
       {description ? (
         <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
           {description}
