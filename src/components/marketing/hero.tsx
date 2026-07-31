@@ -44,6 +44,15 @@ export function Hero() {
         <HeroScene className="h-full w-full" />
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        {/* Cinematic vignette — frames the vehicle instead of letting it bleed
+         * flatly to the edges, the way a real automotive photograph is lit. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 65% at 50% 45%, transparent 45%, color-mix(in oklch, var(--background) 65%, transparent) 100%)",
+          }}
+        />
       </div>
 
       <HolographicHud />

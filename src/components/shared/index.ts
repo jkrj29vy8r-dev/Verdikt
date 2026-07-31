@@ -10,3 +10,6 @@ export * from "./verdict-score";
 export * from "./animated-counter";
 export * from "./glass-panel";
 export * from "./charts";
+export * from "./spotlight";
+export * from "./floating-particles";
+export * from "./scroll-progress";

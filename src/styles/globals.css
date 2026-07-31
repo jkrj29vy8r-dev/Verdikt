@@ -333,6 +333,76 @@
     border-color: color-mix(in oklch, var(--ring) 40%, transparent);
     box-shadow: 0 14px 44px -18px var(--signature);
   }
+
+  /* Page-wide ambient wash — one persistent layer instead of a gradient
+   * repeated per section, so the whole scroll reads as a single continuous
+   * space rather than a stack of seams. Transform-only animation: the browser
+   * composites the pre-blurred layer on the GPU and just slides it, so the
+   * `filter: blur()` cost is paid once, not per frame. Frozen by the global
+   * reduced-motion rule above. */
+  .aurora-veil {
+    background-image:
+      radial-gradient(
+        38% 38% at 18% 20%,
+        color-mix(in oklch, var(--signature) 22%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        34% 34% at 82% 15%,
+        color-mix(in oklch, var(--signature-2) 18%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        46% 46% at 50% 95%,
+        color-mix(in oklch, var(--signature) 12%, transparent),
+        transparent 70%
+      );
+    filter: blur(80px);
+    animation: aurora-drift 24s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* Cinema-grade film grain — a fixed, static (non-animated) texture that
+   * keeps large dark surfaces from reading as flat digital gradient. Costs one
+   * paint layer; never recomputed. */
+  .grain-veil {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+  }
+
+  /* Cursor-tracked radial highlight for elevated surfaces (Linear-style card
+   * spotlight). The host sets `--spot-x`/`--spot-y` via pointer tracking. */
+  .spotlight-glow {
+    background: radial-gradient(
+      380px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      color-mix(in oklch, var(--signature) 16%, transparent),
+      transparent 65%
+    );
+  }
+
+  /* Growing underline for nav-style text links — replaces a flat color swap
+   * with a small tactile confirmation. */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: -3px;
+    height: 1.5px;
+    background-image: linear-gradient(
+      90deg,
+      var(--signature),
+      var(--signature-2)
+    );
+    transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .link-underline:hover::after {
+    right: 0;
+  }
 }
 
 /* Sweep used by `.shimmer`. Neutralized under reduced-motion by the global
@@ -340,5 +410,34 @@
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
+  }
+}
+
+/* Drift used by `.aurora-veil`. Neutralized under reduced-motion by the
+ * global duration override above. */
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-3%, 3%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(3%, -2%, 0) scale(1);
+  }
+}
+
+/* Drift used by `FloatingParticles`. Gated by Tailwind's `motion-safe:`
+ * variant rather than the global override, so reduced-motion users get a
+ * still dot instead of a frozen mid-animation frame. */
+@keyframes particle-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate3d(6px, -14px, 0);
+    opacity: 0.8;
   }
 }
