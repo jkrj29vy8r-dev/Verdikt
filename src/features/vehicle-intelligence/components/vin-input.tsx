@@ -20,6 +20,10 @@ interface VinInputProps {
   save?: boolean;
   /** Called with the result on a successful verdict. */
   onComplete?: (result: RunVerdictResult) => void;
+  /** Called whenever the pending state changes — lets a host hide its own
+   * idle decoration (e.g. `DecodeStage`) the instant a request starts,
+   * without needing its own copy of the pending state. */
+  onPendingChange?: (isPending: boolean) => void;
   className?: string;
   autoFocus?: boolean;
 }
@@ -35,6 +39,7 @@ interface VinInputProps {
 export function VinInput({
   save = true,
   onComplete,
+  onPendingChange,
   className,
   autoFocus,
 }: VinInputProps) {
@@ -43,6 +48,14 @@ export function VinInput({
   const reduced = usePrefersReducedMotion();
 
   const showError = isDirty && !isValid;
+
+  React.useEffect(() => {
+    onPendingChange?.(isPending);
+    // `onPendingChange` intentionally excluded: hosts pass an inline/memoized
+    // callback and we only want to notify on the pending value actually
+    // changing, not on every render of a host that doesn't memoize it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPending]);
 
   function submit() {
     if (!isValid || isPending) return;

@@ -11,112 +11,7 @@ import { FloatingParticles } from "@/components/shared/floating-particles";
 
 import { VERDICT_LOADING_STEPS } from "../verdict-loading";
 import { useVerdictLoading } from "../hooks/use-verdict-loading";
-
-/**
- * AiOrb — the loading cinematic's centerpiece: a rotating conic-gradient ring
- * around a pulsing glass core, with two motes drifting in counter-rotating
- * orbits. Pure CSS + a couple of transform-only Framer tweens (no WebGL — a
- * second live 3D context on every verdict submission would cost far more than
- * this moment is worth). Collapses to a single static glow under
- * reduced-motion.
- */
-function AiOrb({ isHolding }: { isHolding: boolean }) {
-  const reduced = usePrefersReducedMotion();
-
-  return (
-    <div className="relative size-28 shrink-0 sm:size-32">
-      <motion.div
-        aria-hidden
-        className="absolute inset-[-30%] rounded-full bg-gradient-to-br from-signature/40 via-signature-2/25 to-transparent blur-2xl"
-        animate={
-          reduced
-            ? undefined
-            : { opacity: [0.5, 0.9, 0.5], scale: [1, 1.08, 1] }
-        }
-        transition={
-          reduced
-            ? undefined
-            : { duration: 2.6, repeat: Infinity, ease: "easeInOut" }
-        }
-      />
-
-      {!reduced ? (
-        <div
-          aria-hidden
-          className="absolute inset-0 animate-spin rounded-full"
-          style={{
-            background:
-              "conic-gradient(from 0deg, transparent, var(--signature), var(--signature-2), transparent)",
-            WebkitMask:
-              "radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))",
-            mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))",
-            animationDuration: "3s",
-          }}
-        />
-      ) : (
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-full"
-          style={{
-            background:
-              "conic-gradient(from 0deg, var(--signature), var(--signature-2), var(--signature))",
-            WebkitMask:
-              "radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))",
-            mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px))",
-          }}
-        />
-      )}
-
-      <motion.div
-        aria-hidden
-        className="surface-glass border-hairline absolute inset-[14%] overflow-hidden rounded-full border"
-        style={{ boxShadow: "var(--shadow-glow)" }}
-        animate={
-          reduced
-            ? undefined
-            : { scale: isHolding ? [1, 1.06, 1] : [1, 1.03, 1] }
-        }
-        transition={
-          reduced
-            ? undefined
-            : {
-                duration: isHolding ? 1.1 : 1.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }
-        }
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-signature/30 via-transparent to-signature-2/25" />
-      </motion.div>
-
-      {!reduced ? (
-        <>
-          <span
-            aria-hidden
-            className="orbit-particle"
-            style={
-              {
-                "--orbit-radius": "58px",
-                "--orbit-duration": "4.2s",
-              } as React.CSSProperties
-            }
-          />
-          <span
-            aria-hidden
-            className="orbit-particle"
-            style={
-              {
-                "--orbit-radius": "48px",
-                "--orbit-duration": "5.6s",
-                animationDirection: "reverse",
-              } as React.CSSProperties
-            }
-          />
-        </>
-      ) : null}
-    </div>
-  );
-}
+import { AiOrb } from "./ai-orb";
 
 /** The rotating activity caption and its progress bar. */
 function LoadingTicker({
@@ -265,7 +160,7 @@ export function VerdictLoadingExperience({
       <FloatingParticles className="opacity-60" />
 
       <div className="relative flex flex-col items-center gap-8">
-        <AiOrb isHolding={state.isHolding} />
+        <AiOrb variant={state.isHolding ? "holding" : "working"} />
         <LoadingTicker
           message={reduced ? "Synthesizing your verdict…" : state.message}
           progress={reduced ? 96 : progress}
