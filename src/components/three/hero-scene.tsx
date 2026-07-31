@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { PresentationControls } from "@react-three/drei";
 
 import { cn } from "@/lib/utils";
-import { useIsMobile, useWebglSupported } from "@/hooks";
+import { useInView, useIsMobile, useWebglSupported } from "@/hooks";
 
 /**
  * Lazy-load the WebGL layer on the client only. This keeps three.js out of the
@@ -38,10 +38,19 @@ function SceneFallback() {
  * pointer-driven camera — constrained so a visitor can never spin the scene
  * into disorientation. Gracefully degrades to a static gradient when WebGL is
  * unavailable, keeping the hero premium either way.
+ *
+ * The scene idles its render loop once the hero scrolls away (`active`): the
+ * hero sits at the top of a long page, so without this the canvas would keep
+ * drawing at full rate for the entire rest of the visit.
  */
 export function HeroScene({ className }: { className?: string }) {
   const webglSupported = useWebglSupported();
   const isMobile = useIsMobile();
+  // A small negative margin keeps the scene live just past the fold, so the
+  // loop is already running again before the hero is actually back on screen.
+  const [containerRef, inView] = useInView<HTMLDivElement>({
+    rootMargin: "150px",
+  });
 
   if (!webglSupported) {
     return (
@@ -52,10 +61,11 @@ export function HeroScene({ className }: { className?: string }) {
   }
 
   return (
-    <div className={cn("relative h-full w-full", className)}>
+    <div ref={containerRef} className={cn("relative h-full w-full", className)}>
       <React.Suspense fallback={<SceneFallback />}>
         <SceneCanvas
           fallback={<SceneFallback />}
+          active={inView}
           dpr={isMobile ? [1, 1.5] : [1, 2]}
         >
           {/* Pointer-drag rotation is desktop-only: on touch, a global drag

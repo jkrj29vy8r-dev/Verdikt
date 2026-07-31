@@ -3,11 +3,8 @@ import { Badge } from "@/components/ui/badge";
 
 import type { Recommendation } from "../types";
 
-/**
- * The explicit buy / consider / avoid call, in the verdict's semantic color —
- * Verdikt's headline output. Extracted so the full report, the holographic
- * analysis HUD, and any future surface render the recommendation identically.
- */
+/** Recommendation → copy and semantic verdict color. Config as data, so a
+ * label or color change happens here rather than in JSX. */
 const RECOMMENDATION_META: Record<
   Recommendation,
   { label: string; variant: "clear" | "caution" | "flagged" }
@@ -17,6 +14,13 @@ const RECOMMENDATION_META: Record<
   avoid: { label: "Avoid", variant: "flagged" },
 };
 
+/**
+ * RecommendationPill — the explicit buy / consider / avoid call, in the
+ * verdict's semantic color. This is Verdikt's headline output: the whole
+ * product resolves to this one word. Extracted so the full report, the
+ * holographic analysis HUD, and any future surface render it identically —
+ * the recommendation must never disagree with itself across two screens.
+ */
 export function RecommendationPill({
   recommendation,
   showPrefix = true,

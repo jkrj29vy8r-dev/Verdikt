@@ -51,13 +51,14 @@ if (!parsedClient.success) {
 /** Validated variables that are safe to reference on the client. */
 export const clientEnv = parsedClient.data;
 
+/** Parsed once on first server-side access; see `getServerEnv`. */
+let cachedServerEnv: z.infer<typeof serverSchema> | null = null;
+
 /**
  * Validated server-only variables. Accessed lazily through a getter so that
  * merely importing this module in a client bundle never touches secrets.
  * Any client-side access throws immediately.
  */
-let cachedServerEnv: z.infer<typeof serverSchema> | null = null;
-
 export function getServerEnv(): z.infer<typeof serverSchema> {
   if (typeof window !== "undefined") {
     throw new Error(

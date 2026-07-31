@@ -21,7 +21,12 @@ export type RequiredBy<T, K extends keyof T> = Omit<T, K> &
 export type Result<T, E = Error> =
   { ok: true; data: T } | { ok: false; error: E };
 
+/** Wrap a success value. Prefer this over building the object literal by hand
+ * so the discriminant is never mistyped. */
 export const ok = <T>(data: T): Result<T, never> => ({ ok: true, data });
+
+/** Wrap a failure value. Reach for this on *expected* failures (validation, a
+ * missing record); genuine bugs should still throw. */
 export const err = <E>(error: E): Result<never, E> => ({ ok: false, error });
 
 /** Standard shape for paginated collections. */

@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   description: "The terms that govern use of Verdikt.",
 };
 
+/**
+ * Terms of Service. The load-bearing section is "Verdicts are advisory, not
+ * guarantees" — the product renders a Buy/Consider/Avoid call from third-party
+ * data and AI analysis, so the limits of that call are stated plainly rather
+ * than buried.
+ */
 export default function TermsPage() {
   return (
     <LegalDocument

@@ -10,21 +10,32 @@ interface SceneCanvasProps extends Omit<CanvasProps, "children"> {
   children: React.ReactNode;
   /** Rendered while the WebGL context / assets initialize. */
   fallback?: React.ReactNode;
+  /**
+   * Whether the scene should be actively animating. Pass the host's in-view
+   * state: a mounted canvas with the default `always` frameloop keeps issuing
+   * draw calls even when scrolled far off screen, burning GPU and battery to
+   * render something nobody can see. Setting this `false` idles the loop while
+   * keeping the WebGL context alive, so scrolling back is instant (no
+   * re-initialization flash, which unmounting would cause).
+   */
+  active?: boolean;
 }
 
 /**
  * SceneCanvas — the single, opinionated React Three Fiber entry point.
  *
  * Every 3D surface mounts through here so we configure the renderer once:
- * color-managed output, capped DPR for performance, and a demand frameloop
- * under reduced-motion (renders one frame, then idles — no spinning GPU for
- * users who opted out). Individual scenes stay pure and declarative.
+ * color-managed output, capped DPR for performance, and an idle frameloop
+ * whenever the scene can't be seen or the user opted out of motion (renders
+ * one frame, then stops — no spinning GPU). Individual scenes stay pure and
+ * declarative.
  */
 export function SceneCanvas({
   children,
   fallback = null,
   className,
   camera,
+  active = true,
   ...props
 }: SceneCanvasProps) {
   const reduced = usePrefersReducedMotion();
@@ -38,7 +49,7 @@ export function SceneCanvas({
       camera={
         { fov: 35, position: [0, 0, 6], ...camera } as CanvasProps["camera"]
       }
-      frameloop={reduced ? "demand" : "always"}
+      frameloop={reduced || !active ? "demand" : "always"}
       {...props}
     >
       <React.Suspense fallback={fallback}>{children}</React.Suspense>

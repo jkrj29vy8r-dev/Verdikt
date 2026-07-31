@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: "How Verdikt collects, uses, and protects your data.",
 };
 
+/**
+ * Privacy Policy. Content is scoped to what the product actually does — VIN
+ * lookups, AI-written report narratives, Supabase-backed accounts — rather
+ * than generic boilerplate, so the policy stays true as the product evolves.
+ */
 export default function PrivacyPage() {
   return (
     <LegalDocument

@@ -1,5 +1,7 @@
 import { Container } from "@/components/shared/container";
 
+/** One titled block of a legal document. Content is data, not markup, so the
+ * two legal pages stay readable as prose and can never drift typographically. */
 export interface LegalSection {
   heading: string;
   /** Each string renders as its own paragraph; an array of strings renders as

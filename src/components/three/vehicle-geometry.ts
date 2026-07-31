@@ -57,6 +57,12 @@ export function buildBodyGeometry(): THREE.ExtrudeGeometry {
   return geometry;
 }
 
+/**
+ * Wheel geometry — a deliberately low-poly cylinder (16 radial segments).
+ * The wheels read as glowing rings at hero scale, so extra tessellation would
+ * cost vertices no viewer can perceive. Built once and shared across all four
+ * wheel instances.
+ */
 export function buildWheelGeometry(): THREE.CylinderGeometry {
   return new THREE.CylinderGeometry(0.32, 0.32, 0.22, 16);
 }
