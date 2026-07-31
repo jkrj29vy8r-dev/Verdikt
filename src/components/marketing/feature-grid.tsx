@@ -10,7 +10,8 @@ import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Section, SectionHeading } from "@/components/shared/section";
-import { Stagger, StaggerItem } from "@/components/motion";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { blurIn, scaleIn } from "@/lib/motion";
 
 interface Feature {
   icon: LucideIcon;
@@ -64,20 +65,21 @@ const FEATURES: Feature[] = [
 export function FeatureGrid() {
   return (
     <Section id="product">
-      <SectionHeading
-        eyebrow="The intelligence"
-        title="Five dimensions. One verdict."
-        description="Verdikt reconciles fragmented vehicle data into a single, explainable judgment you can act on with confidence."
-        align="center"
-        className="mx-auto mb-16"
-      />
+      <Reveal variants={blurIn} className="mx-auto mb-16">
+        <SectionHeading
+          eyebrow="The intelligence"
+          title="Five dimensions. One verdict."
+          description="Verdikt reconciles fragmented vehicle data into a single, explainable judgment you can act on with confidence."
+          align="center"
+        />
+      </Reveal>
 
       <Stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((feature) => (
-          <StaggerItem key={feature.title}>
-            <Card className="h-full">
+          <StaggerItem key={feature.title} variants={scaleIn}>
+            <Card className="group hover-lift h-full">
               <CardHeader>
-                <div className="mb-2 grid size-11 place-items-center rounded-lg bg-primary/10 text-primary">
+                <div className="mb-2 grid size-11 place-items-center rounded-lg bg-primary/10 text-primary transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-3">
                   <feature.icon className="size-5" />
                 </div>
                 <CardTitle className="text-lg">{feature.title}</CardTitle>

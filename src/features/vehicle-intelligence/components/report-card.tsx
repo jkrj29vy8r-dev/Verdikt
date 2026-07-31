@@ -53,7 +53,7 @@ export function ReportCard({
           </p>
         </CardContent>
 
-        <ChevronRight className="size-5 text-muted-foreground transition-colors group-hover:text-foreground" />
+        <ChevronRight className="size-5 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-foreground" />
       </Link>
     </Card>
   );

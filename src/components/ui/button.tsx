@@ -12,14 +12,14 @@ import { cn } from "@/lib/utils";
  * Use `asChild` to render as a Next `<Link>` while keeping button styling.
  */
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
         signature:
-          "bg-gradient-to-br from-signature to-signature-2 text-primary-foreground shadow-sm hover:shadow-[0_0_32px_-8px_var(--signature)] hover:brightness-110",
+          "sheen bg-gradient-to-br from-signature to-signature-2 text-primary-foreground shadow-sm hover:shadow-[0_0_32px_-8px_var(--signature)] hover:brightness-110",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:

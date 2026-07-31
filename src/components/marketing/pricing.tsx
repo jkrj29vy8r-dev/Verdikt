@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Section, SectionHeading } from "@/components/shared/section";
 import { Reveal } from "@/components/motion";
+import { blurIn } from "@/lib/motion";
 
 interface Tier {
   name: string;
@@ -64,20 +65,21 @@ const TIERS: Tier[] = [
 export function Pricing() {
   return (
     <Section id="pricing">
-      <SectionHeading
-        eyebrow="Pricing"
-        title="Confidence at every scale."
-        description="Start free. Upgrade when the stakes are higher."
-        align="center"
-        className="mx-auto mb-16"
-      />
+      <Reveal variants={blurIn} className="mx-auto mb-16">
+        <SectionHeading
+          eyebrow="Pricing"
+          title="Confidence at every scale."
+          description="Start free. Upgrade when the stakes are higher."
+          align="center"
+        />
+      </Reveal>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {TIERS.map((tier, i) => (
           <Reveal key={tier.name} delay={i * 0.08}>
             <Card
               className={cn(
-                "relative h-full",
+                "hover-lift relative h-full",
                 tier.featured &&
                   "border-primary/40 shadow-lg ring-1 ring-primary/20",
               )}

@@ -58,11 +58,16 @@ export function VinInput({
     <div className={cn("w-full", className)}>
       <div
         className={cn(
-          "surface-glass border-hairline flex items-center gap-2 rounded-xl border p-2 shadow-lg transition-colors focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/40",
+          "group surface-glass border-hairline flex items-center gap-2 rounded-xl border p-2 shadow-lg transition-all duration-300 focus-within:border-ring focus-within:shadow-[0_0_40px_-12px_var(--signature)] focus-within:ring-[3px] focus-within:ring-ring/40",
           showError && "border-destructive focus-within:ring-destructive/30",
         )}
       >
-        <ScanLine className="ml-2 size-5 shrink-0 text-muted-foreground" />
+        <ScanLine
+          className={cn(
+            "ml-2 size-5 shrink-0 text-muted-foreground transition-colors duration-300 group-focus-within:text-signature",
+            showError && "group-focus-within:text-destructive",
+          )}
+        />
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
