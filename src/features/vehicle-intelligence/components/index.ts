@@ -5,3 +5,4 @@ export * from "./recommendation-pill";
 export * from "./report-card";
 export * from "./decode-workspace";
 export * from "./analysis-experience";
+export * from "./verdict-loading-experience";

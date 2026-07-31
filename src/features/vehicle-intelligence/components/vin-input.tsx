@@ -1,15 +1,19 @@
 "use client";
 
 import * as React from "react";
+import { AnimatePresence } from "motion/react";
 import { ArrowRight, Loader2, ScanLine } from "lucide-react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { useVinInput } from "../hooks/use-vin-input";
 import { runVerdict, type RunVerdictResult } from "../actions";
+import { VERDICT_LOADING_MIN_MS } from "../verdict-loading";
+import { VerdictLoadingExperience } from "./verdict-loading-experience";
 
 interface VinInputProps {
   /** Persist the resulting report to the user's account (default true). */
@@ -36,17 +40,36 @@ export function VinInput({
 }: VinInputProps) {
   const { value, setValue, normalized, isValid, isDirty } = useVinInput();
   const [isPending, startTransition] = React.useTransition();
+  const reduced = usePrefersReducedMotion();
 
   const showError = isDirty && !isValid;
 
   function submit() {
     if (!isValid || isPending) return;
     startTransition(async () => {
+      const startedAt = Date.now();
       const result = await runVerdict({ vin: normalized, save });
       if (!result.ok) {
+        // Errors surface immediately — the paced cinematic is a value signal
+        // for a real result, not something a failure should borrow to feel
+        // more "thorough."
         toast.error(result.error);
         return;
       }
+
+      // Hold the reveal back to the cinematic's nominal length. A fast
+      // response still gets the full "watching the AI work" moment; a slow
+      // one is never masked, since this only ever waits the REMAINDER — it
+      // never adds to a response that already ran past the minimum. Skipped
+      // under reduced motion: those users opted out of the choreography, not
+      // out of a fast answer — there's nothing to hold the reveal FOR.
+      const remaining = reduced
+        ? 0
+        : VERDICT_LOADING_MIN_MS - (Date.now() - startedAt);
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+
       toast.success("Verdict ready", {
         description: `${result.data.report.identity.year} ${result.data.report.identity.make} ${result.data.report.identity.model}`,
       });
@@ -112,6 +135,14 @@ export function VinInput({
           ? "That VIN doesn't look right — check the characters and try again."
           : `${normalized.length}/17`}
       </p>
+
+      {/* Mounted exactly while the request is in flight — its lifetime IS the
+       * loading signal (see `useVerdictLoading`'s docblock). */}
+      <AnimatePresence>
+        {isPending ? (
+          <VerdictLoadingExperience key="verdict-loading" className="mt-6" />
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

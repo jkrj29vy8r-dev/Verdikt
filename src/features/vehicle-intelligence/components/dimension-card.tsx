@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedCounter } from "@/components/shared/animated-counter";
 
 import type { IntelligenceDimension } from "../types";
 
@@ -23,7 +24,7 @@ export function DimensionCard({
         <div className="flex items-center justify-between gap-3">
           <CardTitle className="text-base">{dimension.label}</CardTitle>
           <Badge variant={dimension.status}>
-            <span className="tabular">{dimension.score}</span>
+            <AnimatedCounter value={dimension.score} />
           </Badge>
         </div>
       </CardHeader>

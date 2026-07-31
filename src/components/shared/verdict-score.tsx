@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { duration, easing } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/hooks";
+import { AnimatedCounter } from "./animated-counter";
 
 /**
  * The three verdict states. These literals are the canonical values and match
@@ -107,9 +108,10 @@ export function VerdictScore({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={cn("tabular font-semibold tracking-tight", text)}>
-          {value}
-        </span>
+        <AnimatedCounter
+          value={value}
+          className={cn("font-semibold tracking-tight", text)}
+        />
         {!hideLabel ? (
           <span
             className="text-xs font-medium tracking-wide uppercase"

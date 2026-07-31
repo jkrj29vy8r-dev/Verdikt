@@ -34,71 +34,84 @@ export function VerdictReport({
   } = report;
 
   return (
-    <div className={cn("flex flex-col gap-8", className)}>
+    // Each major block cascades in — Verdict, then Identity, then the
+    // dimension grid — rather than the whole report appearing at once. The
+    // outer `gap` is generous enough that `whileInView` on later blocks
+    // triggers naturally as the report is already visible on mount.
+    <Stagger gap={0.15} className={cn("flex flex-col gap-8", className)}>
       {/* Verdict header */}
-      <Card className="overflow-hidden">
-        <CardContent className="flex flex-col items-center gap-8 py-8 md:flex-row md:items-center md:py-6">
-          <VerdictScore
-            score={verdict.score}
-            status={verdict.status}
-            size="lg"
-          />
-          <div className="flex flex-1 flex-col gap-3 text-center md:text-left">
-            <RecommendationPill
-              recommendation={verdict.recommendation}
-              className="justify-center md:justify-start"
+      <StaggerItem>
+        <Card className="overflow-hidden">
+          <CardContent className="flex flex-col items-center gap-8 py-8 md:flex-row md:items-center md:py-6">
+            <VerdictScore
+              score={verdict.score}
+              status={verdict.status}
+              size="lg"
             />
-            <h1 className="text-2xl font-semibold tracking-tight text-balance md:text-3xl">
-              {verdict.headline}
-            </h1>
-            <p className="text-pretty text-muted-foreground">
-              {verdict.summary}
-            </p>
-            {verdict.confidence ? (
-              <ConfidenceNote confidence={verdict.confidence} />
-            ) : null}
-            <p className="tabular text-xs tracking-widest text-muted-foreground">
-              VIN {formatVin(identity.vin)}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="flex flex-1 flex-col gap-3 text-center md:text-left">
+              <RecommendationPill
+                recommendation={verdict.recommendation}
+                className="justify-center md:justify-start"
+              />
+              <h1 className="text-2xl font-semibold tracking-tight text-balance md:text-3xl">
+                {verdict.headline}
+              </h1>
+              <p className="text-pretty text-muted-foreground">
+                {verdict.summary}
+              </p>
+              {verdict.confidence ? (
+                <ConfidenceNote confidence={verdict.confidence} />
+              ) : null}
+              <p className="tabular text-xs tracking-widest text-muted-foreground">
+                VIN {formatVin(identity.vin)}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </StaggerItem>
 
       {/* Identity + valuation strip */}
-      <Card>
-        <CardContent className="grid grid-cols-2 gap-6 py-6 md:grid-cols-3">
-          <Fact icon={Car} label="Vehicle">
-            {identity.year} {identity.make} {identity.model}
-          </Fact>
-          <Fact icon={Wrench} label="Powertrain">
-            {identity.engine} · {identity.drivetrain}
-          </Fact>
-          <Fact icon={Gauge} label="Est. market value">
-            {formatCurrency(valuation.estimate)}
-          </Fact>
-          <Fact label="Value range">
-            {formatCurrency(valuation.low)} – {formatCurrency(valuation.high)}
-          </Fact>
-          <Fact icon={Coins} label="12-mo repairs">
-            ~{formatCurrency(repairForecast.twelveMonthEstimate)}
-          </Fact>
-          <Fact icon={CalendarClock} label="Annual upkeep">
-            ~{formatCurrency(maintenance.annualEstimate)}
-          </Fact>
-        </CardContent>
-      </Card>
+      <StaggerItem>
+        <Card>
+          <CardContent className="grid grid-cols-2 gap-6 py-6 md:grid-cols-3">
+            <Fact icon={Car} label="Vehicle">
+              {identity.year} {identity.make} {identity.model}
+            </Fact>
+            <Fact icon={Wrench} label="Powertrain">
+              {identity.engine} · {identity.drivetrain}
+            </Fact>
+            <Fact icon={Gauge} label="Est. market value">
+              {formatCurrency(valuation.estimate)}
+            </Fact>
+            <Fact label="Value range">
+              {formatCurrency(valuation.low)} – {formatCurrency(valuation.high)}
+            </Fact>
+            <Fact icon={Coins} label="12-mo repairs">
+              ~{formatCurrency(repairForecast.twelveMonthEstimate)}
+            </Fact>
+            <Fact icon={CalendarClock} label="Annual upkeep">
+              ~{formatCurrency(maintenance.annualEstimate)}
+            </Fact>
+          </CardContent>
+        </Card>
+      </StaggerItem>
 
-      <Separator />
+      <StaggerItem>
+        <Separator />
+      </StaggerItem>
 
-      {/* Dimensions */}
-      <Stagger className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {dimensions.map((dimension) => (
-          <StaggerItem key={dimension.key}>
-            <DimensionCard dimension={dimension} />
-          </StaggerItem>
-        ))}
-      </Stagger>
-    </div>
+      {/* Dimensions — its own nested cascade (History, Ownership, Risk,
+       * Valuation, Market), one tier down from the outer section-level one. */}
+      <StaggerItem>
+        <Stagger className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {dimensions.map((dimension) => (
+            <StaggerItem key={dimension.key}>
+              <DimensionCard dimension={dimension} />
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </StaggerItem>
+    </Stagger>
   );
 }
 

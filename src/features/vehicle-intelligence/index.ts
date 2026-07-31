@@ -13,3 +13,4 @@ export * from "./constants";
 export * from "./actions";
 export * from "./components";
 export { useVinInput } from "./hooks/use-vin-input";
+export { useVerdictLoading } from "./hooks/use-verdict-loading";
